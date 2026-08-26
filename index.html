@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -35,11 +37,13 @@ header {
     padding: 15px 0 8px;
 }
 
+
 /* =========================
    センサー起動
 ========================= */
 
 .sensorButton {
+
     display: block;
 
     margin: 5px auto 8px;
@@ -47,12 +51,15 @@ header {
     padding: 13px 30px;
 
     border: none;
+
     border-radius: 12px;
 
     background: #3498db;
+
     color: white;
 
     font-size: 20px;
+
     font-weight: bold;
 }
 
@@ -61,82 +68,185 @@ header {
 }
 
 .status {
+
     text-align: center;
+
     color: #aaa;
+
     margin: 5px;
 }
 
 
 /* =========================
-   コンパス
+   方位磁石
 ========================= */
 
 .compassArea {
+
     text-align: center;
-    margin-top: 5px;
+
+    margin-top: 8px;
 }
 
 .compass {
-    width: 170px;
-    height: 170px;
+
+    width: 230px;
+    height: 230px;
 
     border: 3px solid white;
+
     border-radius: 50%;
 
     margin: auto;
 
     position: relative;
+
+    overflow: hidden;
 }
 
-.compass::before {
-    content: "N";
+
+/* 方位目盛り */
+
+.compassScale {
 
     position: absolute;
 
-    top: 8px;
-    left: 50%;
+    width: 100%;
+    height: 100%;
 
-    transform: translateX(-50%);
-
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.arrow {
-    position: absolute;
-
-    left: 50%;
-    top: 25px;
-
-    width: 4px;
-    height: 60px;
-
-    background: #e74c3c;
-
-    transform-origin: 50% 60px;
+    left: 0;
+    top: 0;
 
     transform:
-        translateX(-50%)
         rotate(0deg);
 }
 
-.arrow::after {
-    content: "";
+
+/* 目盛り */
+
+.tick {
 
     position: absolute;
 
-    top: -8px;
-    left: -7px;
+    left: 50%;
+    top: 5px;
 
-    border-left: 9px solid transparent;
-    border-right: 9px solid transparent;
-    border-bottom: 18px solid #e74c3c;
+    width: 2px;
+    height: 9px;
+
+    background: #aaa;
+
+    transform-origin:
+        1px 110px;
 }
 
-.direction {
-    font-size: 30px;
+
+/* 30度ごとの大きい目盛り */
+
+.tick.major {
+
+    height: 15px;
+
+    width: 3px;
+
+    background: white;
+}
+
+
+/* 方位文字 */
+
+.cardinal {
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 20px;
+
+    transform-origin:
+        0 95px;
+
+    font-size: 14px;
+
     font-weight: bold;
-    margin-top: 5px;
+}
+
+
+/* N */
+
+.north {
+    color: #ff4444;
+}
+
+
+/* 中央の方向指示 */
+
+.compassCenter {
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    text-align: center;
+
+    z-index: 5;
+
+    background: rgba(17,17,17,0.85);
+
+    border-radius: 50%;
+
+    width: 105px;
+    height: 105px;
+
+    padding-top: 23px;
+}
+
+.heading {
+
+    font-size: 30px;
+
+    font-weight: bold;
+}
+
+.directionName {
+
+    font-size: 18px;
+
+    color: #aaa;
+
+    margin-top: 2px;
+}
+
+
+/* 上方向マーカー */
+
+.compassMarker {
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 0;
+    height: 0;
+
+    border-left:
+        8px solid transparent;
+
+    border-right:
+        8px solid transparent;
+
+    border-top:
+        18px solid #ff4444;
+
+    z-index: 10;
 }
 
 
@@ -145,9 +255,11 @@ header {
 ========================= */
 
 .info {
+
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        1fr 1fr;
 
     gap: 10px;
 
@@ -155,6 +267,7 @@ header {
 }
 
 .card {
+
     background: #222;
 
     border-radius: 14px;
@@ -165,11 +278,14 @@ header {
 }
 
 .label {
+
     color: #aaa;
+
     font-size: 14px;
 }
 
 .value {
+
     font-size: 30px;
 
     font-weight: bold;
@@ -178,7 +294,9 @@ header {
 }
 
 .unit {
+
     color: #aaa;
+
     font-size: 13px;
 }
 
@@ -188,6 +306,7 @@ header {
 ========================= */
 
 .graph {
+
     background: #222;
 
     border-radius: 14px;
@@ -198,14 +317,18 @@ header {
 }
 
 .graphTitle {
+
     font-size: 16px;
+
     font-weight: bold;
 
     margin-bottom: 5px;
 }
 
 canvas {
+
     width: 100%;
+
     height: 140px;
 
     display: block;
@@ -230,6 +353,7 @@ canvas {
 .eventTitle {
 
     font-size: 16px;
+
     font-weight: bold;
 
     margin-bottom: 8px;
@@ -253,10 +377,12 @@ canvas {
 }
 
 .event:first-child {
+
     border-top: none;
 }
 
 .eventStrong {
+
     color: #ffcc00;
 
     font-weight: bold;
@@ -264,7 +390,7 @@ canvas {
 
 
 /* =========================
-   距離測定
+   移動距離
 ========================= */
 
 .distanceSection {
@@ -275,6 +401,8 @@ canvas {
     margin-top: 15px;
 
     padding-top: 15px;
+
+    padding-bottom: 20px;
 }
 
 .distanceTitle {
@@ -309,28 +437,47 @@ canvas {
 }
 
 .start {
+
     background: #2ecc71;
+
     color: white;
 }
 
 .end {
+
     background: #e74c3c;
+
     color: white;
 }
 
 button:disabled {
+
     opacity: 0.3;
 }
 
-.distanceValue {
+
+/* 距離表示 */
+
+.distanceMain {
 
     text-align: center;
 
-    font-size: 38px;
+    font-size: 42px;
 
     font-weight: bold;
 
-    margin: 12px;
+    margin-top: 15px;
+}
+
+.distanceSub {
+
+    text-align: center;
+
+    color: #aaa;
+
+    font-size: 18px;
+
+    margin-top: 4px;
 }
 
 </style>
@@ -370,25 +517,44 @@ id="sensorStatus">
 
 
 <!-- =========================
-     コンパス
+     方位磁石
 ========================= -->
 
 <div class="compassArea">
 
 <div class="compass">
 
-<div
-class="arrow"
-id="arrow">
-</div>
-
-</div>
 
 <div
-class="direction"
+class="compassMarker">
+</div>
+
+
+<div
+class="compassScale"
+id="compassScale">
+</div>
+
+
+<div class="compassCenter">
+
+<div
+class="heading"
 id="direction">
 
-0°
+000°
+
+</div>
+
+<div
+class="directionName"
+id="directionName">
+
+N
+
+</div>
+
+</div>
 
 </div>
 
@@ -396,10 +562,11 @@ id="direction">
 
 
 <!-- =========================
-     高度
+     高度・急変
 ========================= -->
 
 <div class="info">
+
 
 <div class="card">
 
@@ -438,10 +605,10 @@ id="eventCount">
 
 <div class="unit">
 回
-
 </div>
 
 </div>
+
 
 </div>
 
@@ -492,12 +659,14 @@ id="eventList">
 
 <div class="distanceSection">
 
+
 <div class="distanceTitle">
 📏 移動距離
 </div>
 
 
 <div class="distanceButtons">
+
 
 <button
 class="start"
@@ -519,16 +688,27 @@ END
 
 </button>
 
+
 </div>
 
 
 <div
-class="distanceValue"
-id="distance">
+class="distanceMain"
+id="distanceCm">
 
-0.00 km
+0 cm
 
 </div>
+
+
+<div
+class="distanceSub"
+id="distanceOther">
+
+0.00 m　｜　0.000 km
+
+</div>
+
 
 </div>
 
@@ -544,7 +724,7 @@ let sensorActive = false;
 
 
 /* ==================================================
-   GPS・距離
+   距離
 ================================================== */
 
 let distanceActive = false;
@@ -564,7 +744,7 @@ let altitudeData = [];
 
 
 /* ==================================================
-   急変検知
+   急変
 ================================================== */
 
 let eventCount = 0;
@@ -573,21 +753,84 @@ let lastEventTime = 0;
 
 
 /*
-   この値以上を「急激な変化」
-   と判定する
+   急変と判定する加速度
 
-   10 m/s² ≒ 1G
+   15 m/s² ≒ 1.5G
 */
 
 const EVENT_THRESHOLD = 15;
 
 
 /*
-   同じ急変を連続記録しないための
-   待ち時間（ミリ秒）
+   連続記録防止
 */
 
 const EVENT_INTERVAL = 1000;
+
+
+/* ==================================================
+   方位目盛りを作る
+================================================== */
+
+function createCompass() {
+
+    const scale =
+        document.getElementById(
+            "compassScale"
+        );
+
+
+    scale.innerHTML = "";
+
+
+    /*
+       10度ごとに目盛り
+    */
+
+    for (
+        let deg = 0;
+        deg < 360;
+        deg += 10
+    ) {
+
+        const tick =
+            document.createElement(
+                "div"
+            );
+
+
+        tick.className = "tick";
+
+
+        if (
+            deg % 30 === 0
+        ) {
+
+            tick.classList.add(
+                "major"
+            );
+
+        }
+
+
+        tick.style.transform =
+
+            "translateX(-50%) " +
+            "rotate(" +
+            deg +
+            "deg)";
+
+
+        scale.appendChild(
+            tick
+        );
+
+    }
+
+}
+
+
+createCompass();
 
 
 /* ==================================================
@@ -600,7 +843,9 @@ async function toggleSensor() {
 
         stopSensor();
 
-    } else {
+    }
+
+    else {
 
         await startSensor();
 
@@ -661,18 +906,20 @@ async function startSensor() {
 
 
     /*
-       加速度センサー
+       加速度
     */
 
     if (
-        typeof DeviceMotionEvent !==
-        "undefined"
+        typeof DeviceMotionEvent
+        !== "undefined"
     ) {
 
+
         if (
-            typeof DeviceMotionEvent
-            .requestPermission ===
-            "function"
+            typeof
+            DeviceMotionEvent
+            .requestPermission
+            === "function"
         ) {
 
             try {
@@ -689,23 +936,32 @@ async function startSensor() {
                 ) {
 
                     window.addEventListener(
+
                         "devicemotion",
+
                         accelerationUpdate
+
                     );
 
                 }
 
-            } catch(error) {
+            }
+            catch(error) {
 
                 console.log(error);
 
             }
 
-        } else {
+        }
+
+        else {
 
             window.addEventListener(
+
                 "devicemotion",
+
                 accelerationUpdate
+
             );
 
         }
@@ -718,14 +974,17 @@ async function startSensor() {
     */
 
     if (
-        typeof DeviceOrientationEvent !==
-        "undefined"
+        typeof
+        DeviceOrientationEvent
+        !== "undefined"
     ) {
 
+
         if (
-            typeof DeviceOrientationEvent
-            .requestPermission ===
-            "function"
+            typeof
+            DeviceOrientationEvent
+            .requestPermission
+            === "function"
         ) {
 
             try {
@@ -742,25 +1001,36 @@ async function startSensor() {
                 ) {
 
                     window.addEventListener(
+
                         "deviceorientation",
+
                         compassUpdate,
+
                         true
+
                     );
 
                 }
 
-            } catch(error) {
+            }
+            catch(error) {
 
                 console.log(error);
 
             }
 
-        } else {
+        }
+
+        else {
 
             window.addEventListener(
+
                 "deviceorientation",
+
                 compassUpdate,
+
                 true
+
             );
 
         }
@@ -797,15 +1067,22 @@ function stopSensor() {
 
 
     window.removeEventListener(
+
         "devicemotion",
+
         accelerationUpdate
+
     );
 
 
     window.removeEventListener(
+
         "deviceorientation",
+
         compassUpdate,
+
         true
+
     );
 
 }
@@ -833,6 +1110,7 @@ function sensorGPS(position) {
         c.altitude !== null
     ) {
 
+
         const altitude =
             c.altitude;
 
@@ -858,8 +1136,11 @@ function sensorGPS(position) {
 
 
         drawGraph(
+
             "altitudeGraph",
+
             altitudeData
+
         );
 
     }
@@ -895,43 +1176,39 @@ function accelerationUpdate(event) {
         a.z || 0;
 
 
-    /*
-       3軸の合成加速度
-    */
-
     const total =
         Math.sqrt(
+
             x * x +
             y * y +
             z * z
+
         );
 
 
     /*
-       急激な変化だけ記録
+       急変だけ記録
     */
 
     if (
         total >= EVENT_THRESHOLD
     ) {
 
+
         const now =
             Date.now();
 
-
-        /*
-           1秒以内の連続検知を
-           まとめる
-        */
 
         if (
             now - lastEventTime
             >= EVENT_INTERVAL
         ) {
 
+
             recordEvent(
                 total
             );
+
 
             lastEventTime =
                 now;
@@ -964,10 +1241,6 @@ function recordEvent(value) {
         );
 
 
-    /*
-       最初のメッセージを削除
-    */
-
     if (
         eventCount === 1
     ) {
@@ -986,7 +1259,9 @@ function recordEvent(value) {
             "ja-JP",
             {
                 hour: "2-digit",
+
                 minute: "2-digit",
+
                 second: "2-digit"
             }
         );
@@ -1017,13 +1292,12 @@ function recordEvent(value) {
         "</span>";
 
 
-    /*
-       新しい記録を上に追加
-    */
-
     list.insertBefore(
+
         item,
+
         list.firstChild
+
     );
 
 }
@@ -1042,6 +1316,10 @@ function compassUpdate(event) {
     let heading = null;
 
 
+    /*
+       iPhone Safari
+    */
+
     if (
         event.webkitCompassHeading
         !== undefined
@@ -1050,7 +1328,9 @@ function compassUpdate(event) {
         heading =
             event.webkitCompassHeading;
 
-    } else if (
+    }
+
+    else if (
         event.alpha !== null
     ) {
 
@@ -1067,27 +1347,92 @@ function compassUpdate(event) {
 
 
     heading =
+
         (
             heading % 360
             + 360
         ) % 360;
 
 
+    /*
+       数字
+    */
+
     document.getElementById(
         "direction"
     ).innerText =
-        heading.toFixed(0)
+
+        String(
+            Math.round(heading)
+        ).padStart(3, "0")
         + "°";
 
 
+    /*
+       方位名
+    */
+
     document.getElementById(
-        "arrow"
+        "directionName"
+    ).innerText =
+
+        getDirectionName(
+            heading
+        );
+
+
+    /*
+       コンパスの目盛りを回転
+
+       現在の方向を上に固定
+    */
+
+    document.getElementById(
+        "compassScale"
     ).style.transform =
 
-        "translateX(-50%) " +
         "rotate(" +
-        heading +
+        (-heading) +
         "deg)";
+
+}
+
+
+/* ==================================================
+   方位名
+================================================== */
+
+function getDirectionName(deg) {
+
+    const directions = [
+
+        "N",
+        "NNE",
+        "NE",
+        "ENE",
+        "E",
+        "ESE",
+        "SE",
+        "SSE",
+        "S",
+        "SSW",
+        "SW",
+        "WSW",
+        "W",
+        "WNW",
+        "NW",
+        "NNW"
+
+    ];
+
+
+    const index =
+        Math.round(
+            deg / 22.5
+        ) % 16;
+
+
+    return directions[index];
 
 }
 
@@ -1105,10 +1450,7 @@ function startDistance() {
     previousPosition = null;
 
 
-    document.getElementById(
-        "distance"
-    ).innerText =
-        "0.00 km";
+    updateDistanceDisplay();
 
 
     document.getElementById(
@@ -1128,7 +1470,9 @@ function startDistance() {
         in navigator
     ) {
 
+
         gpsWatch =
+
             navigator.geolocation
             .watchPosition(
 
@@ -1137,6 +1481,7 @@ function startDistance() {
                 distanceError,
 
                 {
+
                     enableHighAccuracy:
                         true,
 
@@ -1145,6 +1490,7 @@ function startDistance() {
 
                     timeout:
                         10000
+
                 }
 
             );
@@ -1167,10 +1513,12 @@ function endDistance() {
         gpsWatch !== null
     ) {
 
+
         navigator.geolocation
         .clearWatch(
             gpsWatch
         );
+
 
         gpsWatch = null;
 
@@ -1189,12 +1537,7 @@ function endDistance() {
         true;
 
 
-    document.getElementById(
-        "distance"
-    ).innerText =
-
-        totalDistance.toFixed(2)
-        + " km";
+    updateDistanceDisplay();
 
 }
 
@@ -1216,6 +1559,7 @@ function distanceGPS(position) {
     const lat =
         c.latitude;
 
+
     const lon =
         c.longitude;
 
@@ -1223,6 +1567,7 @@ function distanceGPS(position) {
     if (
         previousPosition !== null
     ) {
+
 
         const d =
             calculateDistance(
@@ -1239,7 +1584,9 @@ function distanceGPS(position) {
 
 
         /*
-           GPSの小さな誤差を除外
+           GPS誤差を少し除外
+
+           0.1km = 100m
         */
 
         if (
@@ -1263,11 +1610,42 @@ function distanceGPS(position) {
     };
 
 
+    updateDistanceDisplay();
+
+}
+
+
+/* ==================================================
+   距離表示
+================================================== */
+
+function updateDistanceDisplay() {
+
+    const cm =
+        totalDistance * 100000;
+
+
+    const m =
+        totalDistance * 1000;
+
+
     document.getElementById(
-        "distance"
+        "distanceCm"
     ).innerText =
 
-        totalDistance.toFixed(2)
+        Math.round(cm)
+        .toLocaleString()
+        + " cm";
+
+
+    document.getElementById(
+        "distanceOther"
+    ).innerText =
+
+        m.toFixed(2)
+        + " m　｜　"
+        +
+        totalDistance.toFixed(3)
         + " km";
 
 }
@@ -1286,16 +1664,19 @@ function calculateDistance(
 
 ) {
 
+
     const R =
         6371;
 
 
     const dLat =
+
         (lat2 - lat1)
         * Math.PI / 180;
 
 
     const dLon =
+
         (lon2 - lon1)
         * Math.PI / 180;
 
@@ -1357,6 +1738,7 @@ function drawGraph(
 
 ) {
 
+
     const canvas =
         document.getElementById(
             canvasID
@@ -1364,7 +1746,9 @@ function drawGraph(
 
 
     const ctx =
-        canvas.getContext("2d");
+        canvas.getContext(
+            "2d"
+        );
 
 
     const width =
@@ -1395,10 +1779,12 @@ function drawGraph(
 
 
     ctx.clearRect(
+
         0,
         0,
         width,
         height
+
     );
 
 
@@ -1449,21 +1835,25 @@ function drawGraph(
         i++
     ) {
 
+
         const y =
             height * i / 4;
 
 
         ctx.beginPath();
 
+
         ctx.moveTo(
             0,
             y
         );
 
+
         ctx.lineTo(
             width,
             y
         );
+
 
         ctx.stroke();
 
@@ -1486,20 +1876,26 @@ function drawGraph(
 
 
     data.forEach(
+
         (value, index) => {
 
+
             const x =
+
                 index *
                 width /
                 (data.length - 1);
 
 
             const y =
+
                 height -
+
                 (
                     (value - min)
                     / range
-                ) * height;
+                )
+                * height;
 
 
             if (
@@ -1511,7 +1907,9 @@ function drawGraph(
                     y
                 );
 
-            } else {
+            }
+
+            else {
 
                 ctx.lineTo(
                     x,
@@ -1521,6 +1919,7 @@ function drawGraph(
             }
 
         }
+
     );
 
 
@@ -1546,8 +1945,11 @@ function sensorGPSError(error) {
 function distanceError(error) {
 
     alert(
+
         "位置情報を取得できません。\n" +
+
         "iPhoneの位置情報を許可してください。"
+
     );
 
 }
@@ -1555,4 +1957,5 @@ function distanceError(error) {
 </script>
 
 </body>
+
 </html>
