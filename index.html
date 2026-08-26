@@ -9,7 +9,7 @@
       maximum-scale=1.0,
       user-scalable=no">
 
-<title>Ride Navi</title>
+<title>iPhone Sensor</title>
 
 <style>
 
@@ -28,6 +28,10 @@ body {
         sans-serif;
 }
 
+/* =========================
+   ヘッダー
+========================= */
+
 header {
     text-align: center;
     font-size: 22px;
@@ -35,40 +39,49 @@ header {
     padding: 15px 0 8px;
 }
 
+
+/* =========================
+   START / END
+========================= */
+
+.controls {
+    text-align: center;
+    padding: 5px;
+}
+
 button {
     border: none;
     border-radius: 12px;
     font-size: 20px;
     font-weight: bold;
-    padding: 13px 30px;
-    margin: 5px;
+    padding: 13px 28px;
+    margin: 4px;
 }
 
-.start {
+#startButton {
     background: #2ecc71;
     color: white;
 }
 
-.end {
+#endButton {
     background: #e74c3c;
     color: white;
 }
 
 button:disabled {
-    opacity: 0.35;
-}
-
-.controls {
-    text-align: center;
+    opacity: 0.3;
 }
 
 .status {
     text-align: center;
     color: #aaa;
-    margin: 8px;
+    margin: 6px;
 }
 
-/* コンパス */
+
+/* =========================
+   コンパス
+========================= */
 
 .compassArea {
     text-align: center;
@@ -78,38 +91,55 @@ button:disabled {
 .compass {
     width: 180px;
     height: 180px;
-    border: 4px solid white;
+
+    border: 3px solid white;
     border-radius: 50%;
+
     margin: auto;
+
     position: relative;
 }
 
 .compass::before {
     content: "N";
+
     position: absolute;
+
     top: 8px;
     left: 50%;
+
     transform: translateX(-50%);
+
     font-size: 20px;
     font-weight: bold;
 }
 
 .arrow {
     position: absolute;
+
     left: 50%;
     top: 25px;
+
     width: 4px;
     height: 65px;
+
     background: #e74c3c;
+
     transform-origin: 50% 65px;
-    transform: translateX(-50%);
+
+    transform:
+        translateX(-50%)
+        rotate(0deg);
 }
 
 .arrow::after {
     content: "";
+
     position: absolute;
+
     top: -8px;
     left: -7px;
+
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
     border-bottom: 18px solid #e74c3c;
@@ -121,19 +151,29 @@ button:disabled {
     margin-top: 8px;
 }
 
-/* 数値 */
 
-.valueArea {
+/* =========================
+   高度・距離
+========================= */
+
+.info {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap: 10px;
+
     padding: 10px;
 }
 
 .card {
     background: #222;
+
     border-radius: 14px;
+
     padding: 13px;
+
     text-align: center;
 }
 
@@ -144,7 +184,9 @@ button:disabled {
 
 .value {
     font-size: 32px;
+
     font-weight: bold;
+
     margin-top: 5px;
 }
 
@@ -153,92 +195,145 @@ button:disabled {
     font-size: 13px;
 }
 
-/* グラフ */
 
-.graphCard {
+/* =========================
+   グラフ
+========================= */
+
+.graph {
     background: #222;
+
     border-radius: 14px;
+
     margin: 10px;
+
     padding: 10px;
 }
 
 .graphTitle {
     font-size: 16px;
+
     font-weight: bold;
+
     margin-bottom: 5px;
 }
 
 canvas {
     width: 100%;
     height: 150px;
+
     display: block;
 }
 
+
+/* =========================
+   記録
+========================= */
+
 .record {
-    margin: 10px;
     background: #222;
+
     border-radius: 14px;
+
+    margin: 10px;
+
     padding: 15px;
+
     text-align: center;
 }
 
 .recordTitle {
     color: #aaa;
+
     font-size: 14px;
 }
 
-.recordDistance {
+.recordValue {
     font-size: 36px;
+
     font-weight: bold;
+
+    margin-top: 5px;
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <header>
-🏍️ RIDE SENSOR
+📱 iPhone SENSOR
 </header>
+
 
 <div class="controls">
 
-<button class="start" id="startButton"
-        onclick="startRide()">
+<button
+    id="startButton"
+    onclick="startMeasurement()">
+
 START
+
 </button>
 
-<button class="end" id="endButton"
-        onclick="endRide()"
-        disabled>
+
+<button
+    id="endButton"
+    onclick="endMeasurement()"
+    disabled>
+
 END
+
 </button>
 
 </div>
 
-<div class="status" id="status">
+
+<div
+    class="status"
+    id="status">
+
 待機中
+
 </div>
 
 
-<!-- コンパス -->
+<!-- =========================
+     コンパス
+========================= -->
 
 <div class="compassArea">
 
-<div class="compass" id="compass">
-    <div class="arrow" id="arrow"></div>
+<div class="compass">
+
+<div
+    class="arrow"
+    id="arrow">
 </div>
 
-<div class="direction" id="direction">
+</div>
+
+
+<div
+    class="direction"
+    id="direction">
+
 0°
-</div>
 
 </div>
 
+</div>
 
-<!-- 高度・距離 -->
 
-<div class="valueArea">
+<!-- =========================
+     高度・距離
+========================= -->
+
+<div class="info">
+
 
 <div class="card">
 
@@ -246,9 +341,12 @@ END
 高度
 </div>
 
-<div class="value"
-     id="altitude">
+<div
+    class="value"
+    id="altitude">
+
 ---
+
 </div>
 
 <div class="unit">
@@ -264,9 +362,12 @@ m
 移動距離
 </div>
 
-<div class="value"
-     id="distance">
+<div
+    class="value"
+    id="distance">
+
 0.00
+
 </div>
 
 <div class="unit">
@@ -275,46 +376,60 @@ km
 
 </div>
 
+
 </div>
 
 
-<!-- 高度グラフ -->
+<!-- =========================
+     高度グラフ
+========================= -->
 
-<div class="graphCard">
+<div class="graph">
 
 <div class="graphTitle">
 🏔️ 高度
 </div>
 
-<canvas id="altitudeCanvas"></canvas>
+<canvas
+    id="altitudeGraph">
+</canvas>
 
 </div>
 
 
-<!-- 加速度グラフ -->
+<!-- =========================
+     加速度グラフ
+========================= -->
 
-<div class="graphCard">
+<div class="graph">
 
 <div class="graphTitle">
 📈 加速度
 </div>
 
-<canvas id="accelerationCanvas"></canvas>
+<canvas
+    id="accelerationGraph">
+</canvas>
 
 </div>
 
 
-<!-- 記録 -->
+<!-- =========================
+     記録
+========================= -->
 
 <div class="record">
 
 <div class="recordTitle">
-今回の走行距離
+START → END 移動距離
 </div>
 
-<div class="recordDistance"
-     id="recordDistance">
+<div
+    class="recordValue"
+    id="recordDistance">
+
 0.00 km
+
 </div>
 
 </div>
@@ -322,9 +437,14 @@ km
 
 <script>
 
-let riding = false;
 
-let watchID = null;
+/* ==================================================
+   変数
+================================================== */
+
+let measuring = false;
+
+let gpsWatch = null;
 
 let previousPosition = null;
 
@@ -334,16 +454,14 @@ let altitudeData = [];
 
 let accelerationData = [];
 
-let currentAltitude = null;
 
-
-/* =========================
+/* ==================================================
    START
-========================= */
+================================================== */
 
-async function startRide() {
+async function startMeasurement() {
 
-    riding = true;
+    measuring = true;
 
     totalDistance = 0;
 
@@ -353,218 +471,333 @@ async function startRide() {
 
     accelerationData = [];
 
-    document.getElementById("distance").innerText =
-        "0.00";
 
-    document.getElementById("recordDistance").innerText =
-        "0.00 km";
-
-    document.getElementById("startButton").disabled =
-        true;
-
-    document.getElementById("endButton").disabled =
-        false;
-
-    document.getElementById("status").innerText =
-        "走行中";
+    document.getElementById(
+        "distance"
+    ).innerText = "0.00";
 
 
-    /* GPS */
+    document.getElementById(
+        "recordDistance"
+    ).innerText = "0.00 km";
+
+
+    document.getElementById(
+        "startButton"
+    ).disabled = true;
+
+
+    document.getElementById(
+        "endButton"
+    ).disabled = false;
+
+
+    document.getElementById(
+        "status"
+    ).innerText =
+        "測定中";
+
+
+    /* =========================
+       GPS
+    ========================= */
 
     if ("geolocation" in navigator) {
 
-        watchID =
+        gpsWatch =
             navigator.geolocation.watchPosition(
 
-                gpsHandler,
+                gpsUpdate,
 
                 gpsError,
 
                 {
                     enableHighAccuracy: true,
+
                     maximumAge: 1000,
+
                     timeout: 10000
                 }
             );
+
     }
 
 
-    /* モーションセンサー */
+    /* =========================
+       加速度センサー
+    ========================= */
 
     if (
-        typeof DeviceMotionEvent !== "undefined" &&
-        typeof DeviceMotionEvent.requestPermission ===
-        "function"
+        typeof DeviceMotionEvent !==
+        "undefined"
     ) {
 
-        try {
 
-            const permission =
-                await DeviceMotionEvent.requestPermission();
+        if (
+            typeof DeviceMotionEvent
+                .requestPermission ===
+            "function"
+        ) {
 
-            if (permission === "granted") {
+            try {
 
-                window.addEventListener(
-                    "devicemotion",
-                    motionHandler
-                );
+                const permission =
+                    await
+                    DeviceMotionEvent
+                        .requestPermission();
+
+
+                if (
+                    permission ===
+                    "granted"
+                ) {
+
+                    window.addEventListener(
+
+                        "devicemotion",
+
+                        accelerationUpdate
+                    );
+
+                }
+
             }
 
-        } catch(e) {
+            catch(error) {
 
-            console.log(e);
+                console.log(error);
+
+            }
 
         }
 
-    } else {
+        else {
 
-        window.addEventListener(
-            "devicemotion",
-            motionHandler
-        );
+            window.addEventListener(
+
+                "devicemotion",
+
+                accelerationUpdate
+            );
+
+        }
+
     }
 
 
-    /* 方位 */
+    /* =========================
+       コンパス
+    ========================= */
 
     if (
-        typeof DeviceOrientationEvent !== "undefined" &&
-        typeof DeviceOrientationEvent.requestPermission ===
-        "function"
+        typeof DeviceOrientationEvent !==
+        "undefined"
     ) {
 
-        try {
 
-            const permission =
-                await DeviceOrientationEvent.requestPermission();
+        if (
+            typeof DeviceOrientationEvent
+                .requestPermission ===
+            "function"
+        ) {
 
-            if (permission === "granted") {
+            try {
 
-                window.addEventListener(
-                    "deviceorientation",
-                    orientationHandler,
-                    true
-                );
+                const permission =
+                    await
+                    DeviceOrientationEvent
+                        .requestPermission();
+
+
+                if (
+                    permission ===
+                    "granted"
+                ) {
+
+                    window.addEventListener(
+
+                        "deviceorientation",
+
+                        compassUpdate,
+
+                        true
+                    );
+
+                }
+
             }
 
-        } catch(e) {
+            catch(error) {
 
-            console.log(e);
+                console.log(error);
+
+            }
 
         }
 
-    } else {
+        else {
 
-        window.addEventListener(
-            "deviceorientation",
-            orientationHandler,
-            true
-        );
+            window.addEventListener(
+
+                "deviceorientation",
+
+                compassUpdate,
+
+                true
+            );
+
+        }
+
     }
 
 }
 
 
-/* =========================
+/* ==================================================
    END
-========================= */
+================================================== */
 
-function endRide() {
+function endMeasurement() {
 
-    riding = false;
+    measuring = false;
 
-    if (watchID !== null) {
 
-        navigator.geolocation.clearWatch(
-            watchID
-        );
+    if (gpsWatch !== null) {
 
-        watchID = null;
+        navigator.geolocation
+            .clearWatch(gpsWatch);
+
+        gpsWatch = null;
+
     }
 
 
-    document.getElementById("startButton").disabled =
-        false;
-
-    document.getElementById("endButton").disabled =
-        true;
-
-    document.getElementById("status").innerText =
-        "走行終了";
+    document.getElementById(
+        "startButton"
+    ).disabled = false;
 
 
-    document.getElementById("recordDistance").innerText =
-        totalDistance.toFixed(2) + " km";
+    document.getElementById(
+        "endButton"
+    ).disabled = true;
+
+
+    document.getElementById(
+        "status"
+    ).innerText =
+        "測定終了";
+
+
+    document.getElementById(
+        "recordDistance"
+    ).innerText =
+
+        totalDistance.toFixed(2)
+        + " km";
+
 }
 
 
-/* =========================
+/* ==================================================
    GPS
-========================= */
+================================================== */
 
-function gpsHandler(position) {
+function gpsUpdate(position) {
 
-    if (!riding) return;
-
-    const coords = position.coords;
-
-    const lat = coords.latitude;
-
-    const lon = coords.longitude;
+    if (!measuring) return;
 
 
-    /* 高度 */
+    const c =
+        position.coords;
 
-    if (coords.altitude !== null) {
 
-        currentAltitude =
-            coords.altitude;
+    const latitude =
+        c.latitude;
+
+
+    const longitude =
+        c.longitude;
+
+
+    /* =========================
+       高度
+    ========================= */
+
+    if (
+        c.altitude !== null
+    ) {
+
+        const altitude =
+            c.altitude;
+
 
         document.getElementById(
             "altitude"
         ).innerText =
-            currentAltitude.toFixed(1);
+
+            altitude.toFixed(1);
+
 
         altitudeData.push(
-            currentAltitude
+            altitude
         );
 
-        if (altitudeData.length > 100) {
+
+        if (
+            altitudeData.length > 100
+        ) {
 
             altitudeData.shift();
 
         }
 
+
         drawGraph(
-            "altitudeCanvas",
-            altitudeData,
-            "m"
+
+            "altitudeGraph",
+
+            altitudeData
+
         );
+
     }
 
 
-    /* 距離 */
+    /* =========================
+       距離
+    ========================= */
 
-    if (previousPosition !== null) {
+    if (
+        previousPosition !== null
+    ) {
 
-        const d =
+
+        const distance =
             calculateDistance(
 
-                previousPosition.lat,
-                previousPosition.lon,
+                previousPosition.latitude,
 
-                lat,
-                lon
+                previousPosition.longitude,
+
+                latitude,
+
+                longitude
+
             );
 
+
         /*
-        GPSの誤差で停車中に距離が増えるのを
-        少し防止
+        GPS誤差による距離増加を
+        少し抑える
         */
 
-        if (d > 0 && d < 0.1) {
+        if (
+            distance > 0 &&
+            distance < 0.1
+        ) {
 
-            totalDistance += d;
+            totalDistance +=
+                distance;
 
         }
 
@@ -573,8 +806,11 @@ function gpsHandler(position) {
 
     previousPosition = {
 
-        lat: lat,
-        lon: lon
+        latitude:
+            latitude,
+
+        longitude:
+            longitude
 
     };
 
@@ -582,97 +818,137 @@ function gpsHandler(position) {
     document.getElementById(
         "distance"
     ).innerText =
+
         totalDistance.toFixed(2);
+
 }
 
 
-/* =========================
+/* ==================================================
    距離計算
-========================= */
+================================================== */
 
 function calculateDistance(
+
     lat1,
     lon1,
     lat2,
     lon2
+
 ) {
+
 
     const R = 6371;
 
+
     const dLat =
-        (lat2 - lat1) *
-        Math.PI / 180;
+
+        (lat2 - lat1)
+        * Math.PI / 180;
+
 
     const dLon =
-        (lon2 - lon1) *
-        Math.PI / 180;
+
+        (lon2 - lon1)
+        * Math.PI / 180;
 
 
     const a =
-        Math.sin(dLat / 2) *
-        Math.sin(dLat / 2) +
+
+        Math.sin(
+            dLat / 2
+        ) ** 2
+
+        +
 
         Math.cos(
             lat1 * Math.PI / 180
-        ) *
+        )
+
+        *
 
         Math.cos(
             lat2 * Math.PI / 180
-        ) *
+        )
 
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+        *
+
+        Math.sin(
+            dLon / 2
+        ) ** 2;
 
 
     const c =
+
         2 *
+
         Math.atan2(
+
             Math.sqrt(a),
+
             Math.sqrt(1 - a)
+
         );
 
 
     return R * c;
+
 }
 
 
-/* =========================
+/* ==================================================
    加速度
-========================= */
+================================================== */
 
-function motionHandler(event) {
+function accelerationUpdate(event) {
 
-    if (!riding) return;
+    if (!measuring) return;
+
 
     const a =
         event.accelerationIncludingGravity;
 
+
     if (!a) return;
 
 
-    const x = a.x || 0;
+    const x =
+        a.x || 0;
 
-    const y = a.y || 0;
 
-    const z = a.z || 0;
+    const y =
+        a.y || 0;
+
+
+    const z =
+        a.z || 0;
 
 
     /*
-    合成加速度
+    3軸を合成した加速度
     */
 
     const total =
+
         Math.sqrt(
-            x*x +
-            y*y +
-            z*z
+
+            x * x +
+
+            y * y +
+
+            z * z
+
         );
 
 
-    accelerationData.push(total);
+    accelerationData.push(
+        total
+    );
 
 
-    if (accelerationData.length > 100) {
+    if (
+        accelerationData.length > 100
+    ) {
 
         accelerationData.shift();
 
@@ -680,81 +956,102 @@ function motionHandler(event) {
 
 
     drawGraph(
-        "accelerationCanvas",
-        accelerationData,
-        "m/s²"
+
+        "accelerationGraph",
+
+        accelerationData
+
     );
+
 }
 
 
-/* =========================
+/* ==================================================
    コンパス
-========================= */
+================================================== */
 
-function orientationHandler(event) {
+function compassUpdate(event) {
 
-    if (!riding) return;
+    if (!measuring) return;
+
 
     let heading = null;
 
 
     /*
-    iPhone Safari
+    iPhoneの場合
     */
 
     if (
-        typeof event.webkitCompassHeading !==
-        "undefined"
+        event.webkitCompassHeading !==
+        undefined
     ) {
 
         heading =
             event.webkitCompassHeading;
 
-    } else {
+    }
+
+    else if (
+        event.alpha !== null
+    ) {
 
         heading =
             event.alpha;
+
     }
 
 
-    if (heading === null) return;
+    if (
+        heading === null
+    ) return;
 
 
     heading =
-        ((heading % 360) + 360) % 360;
+
+        (
+            heading % 360
+            + 360
+        ) % 360;
 
 
     document.getElementById(
         "direction"
     ).innerText =
-        heading.toFixed(0) + "°";
 
+        heading.toFixed(0)
+        + "°";
 
-    /*
-    コンパスの矢印を回転
-    */
 
     document.getElementById(
         "arrow"
     ).style.transform =
-        "translateX(-50%) rotate(" +
-        heading +
-        "deg)";
+
+        "translateX(-50%) rotate("
+        + heading
+        + "deg)";
+
 }
 
 
-/* =========================
+/* ==================================================
    グラフ
-========================= */
+================================================== */
 
 function drawGraph(
+
     canvasID,
-    data,
-    unit
+
+    data
+
 ) {
 
+
     const canvas =
-        document.getElementById(canvasID);
+        document.getElementById(
+            canvasID
+        );
+
 
     const ctx =
         canvas.getContext("2d");
@@ -762,6 +1059,7 @@ function drawGraph(
 
     const width =
         canvas.clientWidth;
+
 
     const height =
         canvas.clientHeight;
@@ -774,36 +1072,46 @@ function drawGraph(
     canvas.width =
         width * dpr;
 
+
     canvas.height =
         height * dpr;
 
 
-    ctx.scale(dpr, dpr);
+    ctx.scale(
+        dpr,
+        dpr
+    );
 
 
     ctx.clearRect(
+
         0,
         0,
         width,
         height
+
     );
 
 
-    if (data.length < 2) return;
+    if (
+        data.length < 2
+    ) return;
 
-
-    /* 最大・最小 */
 
     let min =
         Math.min(...data);
+
 
     let max =
         Math.max(...data);
 
 
-    if (max === min) {
+    if (
+        max === min
+    ) {
 
         max += 1;
+
         min -= 1;
 
     }
@@ -813,9 +1121,9 @@ function drawGraph(
         max - min;
 
 
-    /*
-    グリッド
-    */
+    /* =========================
+       グリッド
+    ========================= */
 
     ctx.strokeStyle =
         "#444";
@@ -829,103 +1137,103 @@ function drawGraph(
         i++
     ) {
 
+
         const y =
+
             height *
             i / 4;
 
 
         ctx.beginPath();
 
+
         ctx.moveTo(
             0,
             y
         );
+
 
         ctx.lineTo(
             width,
             y
         );
 
+
         ctx.stroke();
+
     }
 
 
-    /*
-    グラフ
-    */
+    /* =========================
+       グラフ線
+    ========================= */
 
     ctx.strokeStyle =
         "#00ff88";
 
+
     ctx.lineWidth = 3;
+
 
     ctx.beginPath();
 
 
     data.forEach(
+
         (value, index) => {
 
+
             const x =
+
                 index *
                 width /
                 (data.length - 1);
 
 
             const y =
+
                 height -
+
                 (
-                    (value - min) /
-                    range
-                ) *
-                height;
+                    (value - min)
+                    / range
+                )
+                * height;
 
 
-            if (index === 0) {
+            if (
+                index === 0
+            ) {
 
                 ctx.moveTo(
                     x,
                     y
                 );
 
-            } else {
+            }
+
+            else {
 
                 ctx.lineTo(
                     x,
                     y
                 );
+
             }
 
         }
+
     );
 
 
     ctx.stroke();
 
-
-    /*
-    現在値
-    */
-
-    ctx.fillStyle =
-        "white";
-
-    ctx.font =
-        "13px sans-serif";
-
-    ctx.fillText(
-        data[data.length - 1]
-            .toFixed(1)
-        + " "
-        + unit,
-        8,
-        18
-    );
 }
 
 
-/* =========================
+/* ==================================================
    GPSエラー
-========================= */
+================================================== */
 
 function gpsError(error) {
 
@@ -933,6 +1241,7 @@ function gpsError(error) {
         "status"
     ).innerText =
         "GPS取得エラー";
+
 }
 
 </script>
