@@ -2,39 +2,128 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport"
       content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
 
-<title>iPhone Sensor Meter</title>
+<title>Ride Navi</title>
 
 <style>
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     background: #111;
     color: white;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        sans-serif;
 }
 
 header {
     text-align: center;
-    padding: 15px 0;
     font-size: 22px;
     font-weight: bold;
+    padding: 15px 0 8px;
 }
 
 button {
-    display: block;
-    margin: 10px auto 20px;
-    padding: 14px 30px;
-    font-size: 18px;
-    border-radius: 12px;
     border: none;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 13px 30px;
+    margin: 5px;
 }
 
-.grid {
+.start {
+    background: #2ecc71;
+    color: white;
+}
+
+.end {
+    background: #e74c3c;
+    color: white;
+}
+
+button:disabled {
+    opacity: 0.35;
+}
+
+.controls {
+    text-align: center;
+}
+
+.status {
+    text-align: center;
+    color: #aaa;
+    margin: 8px;
+}
+
+/* コンパス */
+
+.compassArea {
+    text-align: center;
+    margin-top: 5px;
+}
+
+.compass {
+    width: 180px;
+    height: 180px;
+    border: 4px solid white;
+    border-radius: 50%;
+    margin: auto;
+    position: relative;
+}
+
+.compass::before {
+    content: "N";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.arrow {
+    position: absolute;
+    left: 50%;
+    top: 25px;
+    width: 4px;
+    height: 65px;
+    background: #e74c3c;
+    transform-origin: 50% 65px;
+    transform: translateX(-50%);
+}
+
+.arrow::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: -7px;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 18px solid #e74c3c;
+}
+
+.direction {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+/* 数値 */
+
+.valueArea {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
@@ -43,172 +132,288 @@ button {
 
 .card {
     background: #222;
-    border-radius: 15px;
+    border-radius: 14px;
+    padding: 13px;
+    text-align: center;
+}
+
+.label {
+    color: #aaa;
+    font-size: 14px;
+}
+
+.value {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.unit {
+    color: #aaa;
+    font-size: 13px;
+}
+
+/* グラフ */
+
+.graphCard {
+    background: #222;
+    border-radius: 14px;
+    margin: 10px;
+    padding: 10px;
+}
+
+.graphTitle {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+canvas {
+    width: 100%;
+    height: 150px;
+    display: block;
+}
+
+.record {
+    margin: 10px;
+    background: #222;
+    border-radius: 14px;
     padding: 15px;
     text-align: center;
 }
 
-.title {
-    font-size: 14px;
+.recordTitle {
     color: #aaa;
+    font-size: 14px;
 }
 
-.value {
-    font-size: 28px;
+.recordDistance {
+    font-size: 36px;
     font-weight: bold;
-    margin-top: 8px;
 }
 
-.unit {
-    font-size: 14px;
-    color: #aaa;
-}
-
-.speed {
-    grid-column: span 2;
-    background: #202020;
-}
-
-.speed .value {
-    font-size: 60px;
-}
-
-.status {
-    text-align: center;
-    color: #aaa;
-    padding: 10px;
-}
 </style>
 </head>
 
 <body>
 
 <header>
-📱 iPhone SENSOR METER
+🏍️ RIDE SENSOR
 </header>
 
-<button onclick="startSensors()">
-センサー開始
+<div class="controls">
+
+<button class="start" id="startButton"
+        onclick="startRide()">
+START
 </button>
 
+<button class="end" id="endButton"
+        onclick="endRide()"
+        disabled>
+END
+</button>
+
+</div>
+
 <div class="status" id="status">
-センサー待機中
+待機中
 </div>
 
-<div class="grid">
 
-    <div class="card speed">
-        <div class="title">GPS SPEED</div>
-        <div class="value" id="speed">0.0</div>
-        <div class="unit">km/h</div>
-    </div>
+<!-- コンパス -->
 
-    <div class="card">
-        <div class="title">ALTITUDE</div>
-        <div class="value" id="altitude">---</div>
-        <div class="unit">m</div>
-    </div>
+<div class="compassArea">
 
-    <div class="card">
-        <div class="title">DISTANCE</div>
-        <div class="value" id="distance">0.00</div>
-        <div class="unit">km</div>
-    </div>
+<div class="compass" id="compass">
+    <div class="arrow" id="arrow"></div>
+</div>
 
-    <div class="card">
-        <div class="title">COMPASS</div>
-        <div class="value" id="heading">---</div>
-        <div class="unit">°</div>
-    </div>
-
-    <div class="card">
-        <div class="title">PITCH</div>
-        <div class="value" id="pitch">---</div>
-        <div class="unit">°</div>
-    </div>
-
-    <div class="card">
-        <div class="title">ROLL</div>
-        <div class="value" id="roll">---</div>
-        <div class="unit">°</div>
-    </div>
-
-    <div class="card">
-        <div class="title">ACCELERATION X</div>
-        <div class="value" id="accX">---</div>
-        <div class="unit">m/s²</div>
-    </div>
-
-    <div class="card">
-        <div class="title">ACCELERATION Y</div>
-        <div class="value" id="accY">---</div>
-        <div class="unit">m/s²</div>
-    </div>
-
-    <div class="card">
-        <div class="title">ACCELERATION Z</div>
-        <div class="value" id="accZ">---</div>
-        <div class="unit">m/s²</div>
-    </div>
-
-    <div class="card">
-        <div class="title">ROTATION α</div>
-        <div class="value" id="alpha">---</div>
-        <div class="unit">°/s</div>
-    </div>
-
-    <div class="card">
-        <div class="title">ROTATION β</div>
-        <div class="value" id="beta">---</div>
-        <div class="unit">°/s</div>
-    </div>
-
-    <div class="card">
-        <div class="title">ROTATION γ</div>
-        <div class="value" id="gamma">---</div>
-        <div class="unit">°/s</div>
-    </div>
-
-    <div class="card">
-        <div class="title">LATITUDE</div>
-        <div class="value" id="lat">---</div>
-    </div>
-
-    <div class="card">
-        <div class="title">LONGITUDE</div>
-        <div class="value" id="lon">---</div>
-    </div>
+<div class="direction" id="direction">
+0°
+</div>
 
 </div>
+
+
+<!-- 高度・距離 -->
+
+<div class="valueArea">
+
+<div class="card">
+
+<div class="label">
+高度
+</div>
+
+<div class="value"
+     id="altitude">
+---
+</div>
+
+<div class="unit">
+m
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+移動距離
+</div>
+
+<div class="value"
+     id="distance">
+0.00
+</div>
+
+<div class="unit">
+km
+</div>
+
+</div>
+
+</div>
+
+
+<!-- 高度グラフ -->
+
+<div class="graphCard">
+
+<div class="graphTitle">
+🏔️ 高度
+</div>
+
+<canvas id="altitudeCanvas"></canvas>
+
+</div>
+
+
+<!-- 加速度グラフ -->
+
+<div class="graphCard">
+
+<div class="graphTitle">
+📈 加速度
+</div>
+
+<canvas id="accelerationCanvas"></canvas>
+
+</div>
+
+
+<!-- 記録 -->
+
+<div class="record">
+
+<div class="recordTitle">
+今回の走行距離
+</div>
+
+<div class="recordDistance"
+     id="recordDistance">
+0.00 km
+</div>
+
+</div>
+
 
 <script>
 
+let riding = false;
+
+let watchID = null;
+
 let previousPosition = null;
+
 let totalDistance = 0;
+
+let altitudeData = [];
+
+let accelerationData = [];
+
+let currentAltitude = null;
 
 
 /* =========================
-   センサー開始
+   START
 ========================= */
 
-async function startSensors() {
+async function startRide() {
+
+    riding = true;
+
+    totalDistance = 0;
+
+    previousPosition = null;
+
+    altitudeData = [];
+
+    accelerationData = [];
+
+    document.getElementById("distance").innerText =
+        "0.00";
+
+    document.getElementById("recordDistance").innerText =
+        "0.00 km";
+
+    document.getElementById("startButton").disabled =
+        true;
+
+    document.getElementById("endButton").disabled =
+        false;
 
     document.getElementById("status").innerText =
-        "センサーを起動しています…";
+        "走行中";
+
+
+    /* GPS */
+
+    if ("geolocation" in navigator) {
+
+        watchID =
+            navigator.geolocation.watchPosition(
+
+                gpsHandler,
+
+                gpsError,
+
+                {
+                    enableHighAccuracy: true,
+                    maximumAge: 1000,
+                    timeout: 10000
+                }
+            );
+    }
+
 
     /* モーションセンサー */
 
-    if (typeof DeviceMotionEvent !== "undefined" &&
-        typeof DeviceMotionEvent.requestPermission === "function") {
+    if (
+        typeof DeviceMotionEvent !== "undefined" &&
+        typeof DeviceMotionEvent.requestPermission ===
+        "function"
+    ) {
 
-        const permission =
-            await DeviceMotionEvent.requestPermission();
+        try {
 
-        if (permission === "granted") {
-            window.addEventListener(
-                "devicemotion",
-                motionHandler
-            );
+            const permission =
+                await DeviceMotionEvent.requestPermission();
+
+            if (permission === "granted") {
+
+                window.addEventListener(
+                    "devicemotion",
+                    motionHandler
+                );
+            }
+
+        } catch(e) {
+
+            console.log(e);
+
         }
 
     } else {
@@ -220,50 +425,76 @@ async function startSensors() {
     }
 
 
-    /* デバイスの向き */
+    /* 方位 */
 
-    if (typeof DeviceOrientationEvent !== "undefined" &&
-        typeof DeviceOrientationEvent.requestPermission === "function") {
+    if (
+        typeof DeviceOrientationEvent !== "undefined" &&
+        typeof DeviceOrientationEvent.requestPermission ===
+        "function"
+    ) {
 
-        const permission =
-            await DeviceOrientationEvent.requestPermission();
+        try {
 
-        if (permission === "granted") {
+            const permission =
+                await DeviceOrientationEvent.requestPermission();
 
-            window.addEventListener(
-                "deviceorientation",
-                orientationHandler
-            );
+            if (permission === "granted") {
+
+                window.addEventListener(
+                    "deviceorientation",
+                    orientationHandler,
+                    true
+                );
+            }
+
+        } catch(e) {
+
+            console.log(e);
+
         }
 
     } else {
 
         window.addEventListener(
             "deviceorientation",
-            orientationHandler
+            orientationHandler,
+            true
         );
     }
 
+}
 
-    /* GPS */
 
-    if ("geolocation" in navigator) {
+/* =========================
+   END
+========================= */
 
-        navigator.geolocation.watchPosition(
-            gpsHandler,
-            gpsError,
-            {
-                enableHighAccuracy: true,
-                maximumAge: 1000,
-                timeout: 10000
-            }
+function endRide() {
+
+    riding = false;
+
+    if (watchID !== null) {
+
+        navigator.geolocation.clearWatch(
+            watchID
         );
 
+        watchID = null;
     }
 
+
+    document.getElementById("startButton").disabled =
+        false;
+
+    document.getElementById("endButton").disabled =
+        true;
 
     document.getElementById("status").innerText =
-        "センサー動作中";
+        "走行終了";
+
+
+    document.getElementById("recordDistance").innerText =
+        totalDistance.toFixed(2) + " km";
 }
 
 
@@ -273,63 +504,85 @@ async function startSensors() {
 
 function gpsHandler(position) {
 
+    if (!riding) return;
+
     const coords = position.coords;
 
-    const latitude = coords.latitude;
-    const longitude = coords.longitude;
+    const lat = coords.latitude;
 
-    document.getElementById("lat").innerText =
-        latitude.toFixed(6);
-
-    document.getElementById("lon").innerText =
-        longitude.toFixed(6);
-
-
-    /* 速度 */
-
-    if (coords.speed !== null &&
-        coords.speed >= 0) {
-
-        const speed =
-            coords.speed * 3.6;
-
-        document.getElementById("speed").innerText =
-            speed.toFixed(1);
-    }
+    const lon = coords.longitude;
 
 
     /* 高度 */
 
     if (coords.altitude !== null) {
 
-        document.getElementById("altitude").innerText =
-            coords.altitude.toFixed(1);
+        currentAltitude =
+            coords.altitude;
+
+        document.getElementById(
+            "altitude"
+        ).innerText =
+            currentAltitude.toFixed(1);
+
+        altitudeData.push(
+            currentAltitude
+        );
+
+        if (altitudeData.length > 100) {
+
+            altitudeData.shift();
+
+        }
+
+        drawGraph(
+            "altitudeCanvas",
+            altitudeData,
+            "m"
+        );
     }
 
 
-    /* 移動距離 */
+    /* 距離 */
 
     if (previousPosition !== null) {
 
-        const distance =
+        const d =
             calculateDistance(
-                previousPosition.latitude,
-                previousPosition.longitude,
-                latitude,
-                longitude
+
+                previousPosition.lat,
+                previousPosition.lon,
+
+                lat,
+                lon
             );
 
-        totalDistance += distance;
+        /*
+        GPSの誤差で停車中に距離が増えるのを
+        少し防止
+        */
 
-        document.getElementById("distance").innerText =
-            totalDistance.toFixed(2);
+        if (d > 0 && d < 0.1) {
+
+            totalDistance += d;
+
+        }
+
     }
 
 
     previousPosition = {
-        latitude: latitude,
-        longitude: longitude
+
+        lat: lat,
+        lon: lon
+
     };
+
+
+    document.getElementById(
+        "distance"
+    ).innerText =
+        totalDistance.toFixed(2);
 }
 
 
@@ -344,7 +597,7 @@ function calculateDistance(
     lon2
 ) {
 
-    const R = 6371000;
+    const R = 6371;
 
     const dLat =
         (lat2 - lat1) *
@@ -354,34 +607,32 @@ function calculateDistance(
         (lon2 - lon1) *
         Math.PI / 180;
 
+
     const a =
         Math.sin(dLat / 2) *
         Math.sin(dLat / 2) +
 
-        Math.cos(lat1 * Math.PI / 180) *
-        Math.cos(lat2 * Math.PI / 180) *
+        Math.cos(
+            lat1 * Math.PI / 180
+        ) *
+
+        Math.cos(
+            lat2 * Math.PI / 180
+        ) *
 
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
 
+
     const c =
-        2 * Math.atan2(
+        2 *
+        Math.atan2(
             Math.sqrt(a),
             Math.sqrt(1 - a)
         );
 
-    return R * c / 1000;
-}
 
-
-/* =========================
-   GPSエラー
-========================= */
-
-function gpsError(error) {
-
-    document.getElementById("status").innerText =
-        "GPS取得エラー：" + error.message;
+    return R * c;
 }
 
 
@@ -391,63 +642,297 @@ function gpsError(error) {
 
 function motionHandler(event) {
 
-    const a = event.accelerationIncludingGravity;
+    if (!riding) return;
+
+    const a =
+        event.accelerationIncludingGravity;
 
     if (!a) return;
 
-    document.getElementById("accX").innerText =
-        (a.x || 0).toFixed(2);
 
-    document.getElementById("accY").innerText =
-        (a.y || 0).toFixed(2);
+    const x = a.x || 0;
 
-    document.getElementById("accZ").innerText =
-        (a.z || 0).toFixed(2);
+    const y = a.y || 0;
+
+    const z = a.z || 0;
 
 
-    /* 回転速度 */
+    /*
+    合成加速度
+    */
 
-    if (event.rotationRate) {
+    const total =
+        Math.sqrt(
+            x*x +
+            y*y +
+            z*z
+        );
 
-        document.getElementById("alpha").innerText =
-            (event.rotationRate.alpha || 0).toFixed(1);
 
-        document.getElementById("beta").innerText =
-            (event.rotationRate.beta || 0).toFixed(1);
+    accelerationData.push(total);
 
-        document.getElementById("gamma").innerText =
-            (event.rotationRate.gamma || 0).toFixed(1);
+
+    if (accelerationData.length > 100) {
+
+        accelerationData.shift();
+
     }
+
+
+    drawGraph(
+        "accelerationCanvas",
+        accelerationData,
+        "m/s²"
+    );
 }
 
 
 /* =========================
-   方位・傾き
+   コンパス
 ========================= */
 
 function orientationHandler(event) {
 
-    let heading = event.alpha;
+    if (!riding) return;
 
-    if (heading !== null) {
+    let heading = null;
 
-        document.getElementById("heading").innerText =
-            heading.toFixed(0);
+
+    /*
+    iPhone Safari
+    */
+
+    if (
+        typeof event.webkitCompassHeading !==
+        "undefined"
+    ) {
+
+        heading =
+            event.webkitCompassHeading;
+
+    } else {
+
+        heading =
+            event.alpha;
     }
 
 
-    if (event.beta !== null) {
+    if (heading === null) return;
 
-        document.getElementById("pitch").innerText =
-            event.beta.toFixed(1);
+
+    heading =
+        ((heading % 360) + 360) % 360;
+
+
+    document.getElementById(
+        "direction"
+    ).innerText =
+        heading.toFixed(0) + "°";
+
+
+    /*
+    コンパスの矢印を回転
+    */
+
+    document.getElementById(
+        "arrow"
+    ).style.transform =
+        "translateX(-50%) rotate(" +
+        heading +
+        "deg)";
+}
+
+
+/* =========================
+   グラフ
+========================= */
+
+function drawGraph(
+    canvasID,
+    data,
+    unit
+) {
+
+    const canvas =
+        document.getElementById(canvasID);
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    const width =
+        canvas.clientWidth;
+
+    const height =
+        canvas.clientHeight;
+
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+
+    canvas.width =
+        width * dpr;
+
+    canvas.height =
+        height * dpr;
+
+
+    ctx.scale(dpr, dpr);
+
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    if (data.length < 2) return;
+
+
+    /* 最大・最小 */
+
+    let min =
+        Math.min(...data);
+
+    let max =
+        Math.max(...data);
+
+
+    if (max === min) {
+
+        max += 1;
+        min -= 1;
+
     }
 
 
-    if (event.gamma !== null) {
+    const range =
+        max - min;
 
-        document.getElementById("roll").innerText =
-            event.gamma.toFixed(1);
+
+    /*
+    グリッド
+    */
+
+    ctx.strokeStyle =
+        "#444";
+
+    ctx.lineWidth = 1;
+
+
+    for (
+        let i = 1;
+        i < 4;
+        i++
+    ) {
+
+        const y =
+            height *
+            i / 4;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            y
+        );
+
+        ctx.lineTo(
+            width,
+            y
+        );
+
+        ctx.stroke();
     }
+
+
+    /*
+    グラフ
+    */
+
+    ctx.strokeStyle =
+        "#00ff88";
+
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+
+
+    data.forEach(
+        (value, index) => {
+
+            const x =
+                index *
+                width /
+                (data.length - 1);
+
+
+            const y =
+                height -
+                (
+                    (value - min) /
+                    range
+                ) *
+                height;
+
+
+            if (index === 0) {
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            } else {
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+            }
+
+        }
+    );
+
+
+    ctx.stroke();
+
+
+    /*
+    現在値
+    */
+
+    ctx.fillStyle =
+        "white";
+
+    ctx.font =
+        "13px sans-serif";
+
+    ctx.fillText(
+        data[data.length - 1]
+            .toFixed(1)
+        + " "
+        + unit,
+        8,
+        18
+    );
+}
+
+
+/* =========================
+   GPSエラー
+========================= */
+
+function gpsError(error) {
+
+    document.getElementById(
+        "status"
+    ).innerText =
+        "GPS取得エラー";
 }
 
 </script>
