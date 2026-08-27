@@ -103,7 +103,7 @@ header {
 
 
 /* ========================================
-   固定する方位文字
+   固定する方位
 ======================================== */
 
 .compassDirection {
@@ -124,8 +124,6 @@ header {
     z-index: 5;
 }
 
-
-/* 方位文字共通 */
 
 .dir {
 
@@ -271,14 +269,11 @@ header {
     transform:
         translateX(-50%);
 
-    transform-origin:
-        center 107px;
-
     border-radius: 3px;
 }
 
 
-/* 白い反対側 */
+/* 白い針 */
 
 .needleBack {
 
@@ -296,9 +291,6 @@ header {
 
     transform:
         translateX(-50%);
-
-    transform-origin:
-        center 0;
 
     border-radius: 3px;
 }
@@ -377,7 +369,7 @@ header {
 
 
 /* ========================================
-   高度
+   高度・急変
 ======================================== */
 
 .info {
@@ -528,7 +520,7 @@ canvas {
 
     padding-top: 15px;
 
-    padding-bottom: 20px;
+    padding-bottom: 25px;
 }
 
 .distanceTitle {
@@ -581,26 +573,18 @@ button:disabled {
     opacity: 0.3;
 }
 
+
+/* kmを大きく表示 */
+
 .distanceMain {
 
     text-align: center;
 
-    font-size: 42px;
+    font-size: 48px;
 
     font-weight: bold;
 
-    margin-top: 15px;
-}
-
-.distanceSub {
-
-    text-align: center;
-
-    color: #aaa;
-
-    font-size: 18px;
-
-    margin-top: 4px;
+    margin-top: 20px;
 }
 
 </style>
@@ -850,20 +834,12 @@ END
 
 <div
 class="distanceMain"
-id="distanceCm">
+id="distanceKm">
 
-0 cm
-
-</div>
-
-
-<div
-class="distanceSub"
-id="distanceOther">
-
-0.00 m　｜　0.000 km
+0.00 km
 
 </div>
+
 
 </div>
 
@@ -908,7 +884,7 @@ let lastEventTime = 0;
 
 
 /*
-   15m/s²以上を急変とする
+   急激な変化の判定値
 */
 
 const EVENT_THRESHOLD = 15;
@@ -976,6 +952,7 @@ function createTicks() {
 
 }
 
+
 createTicks();
 
 
@@ -989,7 +966,9 @@ async function toggleSensor() {
 
         stopSensor();
 
-    } else {
+    }
+
+    else {
 
         await startSensor();
 
@@ -1102,7 +1081,9 @@ async function startSensor() {
 
             }
 
-        } else {
+        }
+
+        else {
 
             window.addEventListener(
 
@@ -1163,7 +1144,9 @@ async function startSensor() {
 
             }
 
-        } else {
+        }
+
+        else {
 
             window.addEventListener(
 
@@ -1233,7 +1216,7 @@ function stopSensor() {
 
 
 /* ========================================
-   GPS
+   GPS・高度
 ======================================== */
 
 function sensorGPS(position) {
@@ -1326,6 +1309,10 @@ function accelerationUpdate(event) {
         );
 
 
+    /*
+       急変だけ記録
+    */
+
     if (
         total >= EVENT_THRESHOLD
     ) {
@@ -1394,9 +1381,16 @@ function recordEvent(value) {
         now.toLocaleTimeString(
             "ja-JP",
             {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit"
+
+                hour:
+                    "2-digit",
+
+                minute:
+                    "2-digit",
+
+                second:
+                    "2-digit"
+
             }
         );
 
@@ -1500,7 +1494,7 @@ function compassUpdate(event) {
         + "°";
 
 
-    /* 方位名 */
+    /* 方位 */
 
     document.getElementById(
         "directionName"
@@ -1512,10 +1506,7 @@ function compassUpdate(event) {
 
 
     /*
-       針だけを回転
-       
-       方位文字・目盛りは
-       一切回転しない
+       針だけ回転
     */
 
     document.getElementById(
@@ -1689,6 +1680,7 @@ function distanceGPS(position) {
     const lat =
         c.latitude;
 
+
     const lon =
         c.longitude;
 
@@ -1712,6 +1704,10 @@ function distanceGPS(position) {
             );
 
 
+        /*
+           GPSの異常値を除外
+        */
+
         if (
             d > 0 &&
             d < 0.1
@@ -1726,9 +1722,11 @@ function distanceGPS(position) {
 
     previousPosition = {
 
-        lat: lat,
+        lat:
+            lat,
 
-        lon: lon
+        lon:
+            lon
 
     };
 
@@ -1744,31 +1742,11 @@ function distanceGPS(position) {
 
 function updateDistanceDisplay() {
 
-    const cm =
-        totalDistance * 100000;
-
-
-    const m =
-        totalDistance * 1000;
-
-
     document.getElementById(
-        "distanceCm"
+        "distanceKm"
     ).innerText =
 
-        Math.round(cm)
-        .toLocaleString()
-        + " cm";
-
-
-    document.getElementById(
-        "distanceOther"
-    ).innerText =
-
-        m.toFixed(2)
-        + " m　｜　"
-        +
-        totalDistance.toFixed(3)
+        totalDistance.toFixed(2)
         + " km";
 
 }
@@ -1786,6 +1764,7 @@ function calculateDistance(
     lon2
 
 ) {
+
 
     const R =
         6371;
@@ -1859,6 +1838,7 @@ function drawGraph(
     data
 
 ) {
+
 
     const canvas =
         document.getElementById(
@@ -2062,9 +2042,11 @@ function distanceError(error) {
 
     alert(
 
-        "位置情報を取得できません。\n" +
+        "位置情報を取得できません。\n\n" +
 
-        "iPhoneの位置情報を許可してください。"
+        "iPhoneの設定で\n" +
+
+        "Safariの位置情報を許可してください。"
 
     );
 
